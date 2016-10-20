@@ -1,6 +1,6 @@
-% Example code for visualizing spatial circulant correlation filters
+% Example code for visualizing spatial circulant multi-channel correlation filters
 rgb = imread('lena.jpg'); 
-img = im2double(rgb2gray(rgb)); 
+img = im2double(rgb); 
 
 % 2D projected points on the book
 pts = [248, 292, 248, 292;
@@ -27,22 +27,23 @@ dy = -floor(dsize(1)/2):floor(dsize(1)/2);
 [dp1,dp2] = meshgrid(dx, dy);
 N = length(dp1(:)); % Get the number of warps to obtain
 dP = [dp1(:),dp2(:)]'; % Set the 
-subplot(1,2,2); all_patches = zeros(N*dsize(1),dsize(2)); 
+subplot(1,2,2); all_patches = zeros(N*dsize(1),dsize(2),3); 
+
 % Display all the images we are collecting
 h2 = imagesc(all_patches); axis off; axis square; 
 title('Concatenation of Sub-Images (X)'); 
 
 % Allocate space for the sub-images and labels
-X = zeros(N,N); % vectorized sub-images
+X = zeros(N,N,3); % vectorized sub-images
 y = zeros(N,1); % output 
 
 sigma = 5; 
 for n = 1:N
     dpn = dP(:,n); 
     xn = circshift(x,[dpn(2),dpn(1)]); % Circular shift 
-    X(n,:) = xn(:)'; % Store the sub-patch
+    X(n,:,:) = reshape(xn,[1,size(xn,1)*size(xn,2),3]); % Store the sub-patch
     y(n) = exp(-dpn'*dpn/sigma); % Store the labels
-    all_patches((n-1)*dsize(1)+1:n*dsize(1),:) = xn; % Set the image
+    all_patches((n-1)*dsize(1)+1:n*dsize(1),:,:) = xn; % Set the image
     set(h1,'CData',xn); % Set the data showing all the patches
     set(h2,'CData',all_patches); % Set the data showing all the patches
     drawnow; 
@@ -54,7 +55,20 @@ end
 figure(2); clf; 
 mesh(dx,dy,reshape(y,dsize)); title('Desired output response'); 
 
-% Place your efficient solution based on the FFT here
+% Reshape to solve
+X = reshape(X,[size(X,1),size(X,2)*size(X,3)]); 
+
+% Finally form the auto-scatter and cross-scatter matrices
+S = X'*X; I = eye(3*N); % Setup the S matrix and the identity matrix
+figure(3); h = (S + 1e1*I)\(X'*y); % Use backslash instead of inv (more stable)
+g = reshape(h,[dsize(1),dsize(2),3]); % Reshape the weight vector
+
+% Swap the above solution for a more efficient kernel version using fft2
+% place the result below. 
+
+% Obtain the final single-channel response using multi-channel weight vectors and image
+r = imfilter(img(:,:,1),g(:,:,1)) + imfilter(img(:,:,2),g(:,:,2)) + imfilter(img(:,:,3),g(:,:,3));
+imagesc(r); 
 
 
 

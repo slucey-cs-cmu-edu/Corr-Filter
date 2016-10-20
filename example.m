@@ -1,6 +1,6 @@
-% Example code for Assignment 4 in 16423
+% Example code for visualizing spatial correlation filters 
 rgb = imread('lena.jpg'); 
-img = rgb2gray(rgb); 
+img = im2double(rgb2gray(rgb)); 
 
 % 2D projected points on the book
 pts = [248, 292, 248, 292;
@@ -59,9 +59,7 @@ end
 figure(2); clf; 
 mesh(dx,dy,reshape(y,dsize)); title('Desired output response'); 
 
-% Finally form the auto-scatter and cross-scatter matrices
-%Sxx = X'*X/N; Sxy = X'*y/N; I = eye(N); 
-%h = (Sxx + 1e3*I)\Sxy; 
+% Place your solution code to the filter 
 
 
 
