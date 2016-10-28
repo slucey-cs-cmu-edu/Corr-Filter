@@ -49,7 +49,9 @@ for n = 1:N
     drawnow; 
 end
 
-% Take the fft of the response
+% Shift the y-response so the center is at position (1,1)
+% fftshift function does this, or could be done using circshift
+yf = fft2(ifftshift(reshape(y,dsize)));
 
 % Display the desired output response
 figure(2); clf; 
@@ -63,8 +65,8 @@ S = X'*X; I = eye(3*N); % Setup the S matrix and the identity matrix
 figure(3); h = (S + 1e1*I)\(X'*y); % Use backslash instead of inv (more stable)
 g = reshape(h,[dsize(1),dsize(2),3]); % Reshape the weight vector
 
-% Swap the above solution for a more efficient kernel version using fft2
-% place the result below. 
+% Place your code here for solving for g in the Fourier domain (remember to
+% use the yf (the fft of y after being fftshifted) provided. 
 
 % Obtain the final single-channel response using multi-channel weight vectors and image
 r = imfilter(img(:,:,1),g(:,:,1)) + imfilter(img(:,:,2),g(:,:,2)) + imfilter(img(:,:,3),g(:,:,3));

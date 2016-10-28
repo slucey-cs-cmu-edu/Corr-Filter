@@ -48,14 +48,17 @@ for n = 1:N
     drawnow; 
 end
 
-% Take the fft of the response
-
 % Display the desired output response
 figure(2); clf; 
 mesh(dx,dy,reshape(y,dsize)); title('Desired output response'); 
+end
 
-% Place your efficient solution based on the FFT here
+% Shift the y-response so the center is at position (1,1)
+% fftshift function does this, or could be done using circshift
+yf = fft2(ifftshift(reshape(y,dsize)));  
 
+% Place your code here for solving for g in the Fourier domain (remember to
+% use the yf (the fft of y after being fftshifted) provided. 
 
 
 
