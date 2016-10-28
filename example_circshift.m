@@ -40,7 +40,7 @@ sigma = 5;
 for n = 1:N
     dpn = dP(:,n); 
     xn = circshift(x,[dpn(2),dpn(1)]); % Circular shift 
-    X(n,:) = xn(:)'; % Store the sub-patch
+    X(:,n) = xn(:); % Store the sub-patch
     y(n) = exp(-dpn'*dpn/sigma); % Store the labels
     all_patches((n-1)*dsize(1)+1:n*dsize(1),:) = xn; % Set the image
     set(h1,'CData',xn); % Set the data showing all the patches
@@ -51,7 +51,6 @@ end
 % Display the desired output response
 figure(2); clf; 
 mesh(dx,dy,reshape(y,dsize)); title('Desired output response'); 
-end
 
 % Shift the y-response so the center is at position (1,1)
 % fftshift function does this, or could be done using circshift

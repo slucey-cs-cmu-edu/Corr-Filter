@@ -58,11 +58,11 @@ figure(2); clf;
 mesh(dx,dy,reshape(y,dsize)); title('Desired output response'); 
 
 % Reshape to solve
-X = reshape(X,[size(X,1),size(X,2)*size(X,3)]); 
+X = reshape(X,[size(X,1),size(X,2)*size(X,3)])'; 
 
 % Finally form the auto-scatter and cross-scatter matrices
-S = X'*X; I = eye(3*N); % Setup the S matrix and the identity matrix
-figure(3); h = (S + 1e1*I)\(X'*y); % Use backslash instead of inv (more stable)
+S = X*X'; I = eye(3*N); % Setup the S matrix and the identity matrix
+figure(3); h = (S + 1e1*I)\(X*y); % Use backslash instead of inv (more stable)
 g = reshape(h,[dsize(1),dsize(2),3]); % Reshape the weight vector
 
 % Place your code here for solving for g in the Fourier domain (remember to
