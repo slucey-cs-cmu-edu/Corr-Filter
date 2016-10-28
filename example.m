@@ -46,7 +46,7 @@ sigma = 5; % Variance of the desired Gaussian output response
 for n = 1:N
     dpn = dP(:,n); 
     xn = t.imwarp(img, gnd_p + dpn, dsize); % Define the template
-    X(n,:) = xn(:)'; % Store the sub-patch
+    X(:,n) = xn(:); % Store the sub-patch
     y(n) = exp(-dpn'*dpn/sigma); % Store the labels
     t.redraw(gnd_p + dpn, dsize, h1); % Draw the ground-truth
     all_patches((n-1)*dsize(1)+1:n*dsize(1),:) = xn; % Set the image
